@@ -103,12 +103,11 @@ kubectl apply -f \
 ### 3. Install Envoy Gateway
 
 ```bash
-helm repo add envoy-gateway https://charts.gateway.envoyproxy.io
-helm install envoy-gateway envoy-gateway/gateway-helm \
-  --version v1.4.1 \
-  --namespace envoy-gateway-system \
-  --create-namespace \
-  --wait
+helm install eg oci://docker.io/envoyproxy/gateway-helm
+  --version v1.7.1 \
+  -n envoy-gateway-system\
+  --create-namespace
+helm repo update
 ```
 
 ### 4. Deploy sample apps
@@ -132,6 +131,18 @@ Install the tool:
 
 ```bash
 go install github.com/kubernetes-sigs/ingress2gateway@v1.0.0
+```
+
+Go puts binaries in $(go env GOPATH)/bin — add it to PATH if needed
+
+```bash
+export PATH="$PATH:$(go env GOPATH | sed 's|\\|/|g' | sed 's|C:|/drives/c|')/bin"
+```
+
+ingress2gateway version
+
+```bash
+ingress2gateway version v1.0.0
 ```
 
 Translate your Ingress to Gateway API:

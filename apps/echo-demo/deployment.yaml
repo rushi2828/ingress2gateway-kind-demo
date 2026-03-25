@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-demo
+  namespace: demo
+  labels:
+    app: echo-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-demo
+  template:
+    metadata:
+      labels:
+        app: echo-demo
+    spec:
+      containers:
+        - name: echo
+          image: ealen/echo-server:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: PORT
+              value: "80"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-demo
+  namespace: demo
+spec:
+  selector:
+    app: echo-demo
+  ports:
+    - port: 80
+      targetPort: 80
